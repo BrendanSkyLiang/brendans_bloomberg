@@ -1,5 +1,4 @@
 import sys
-from torch import symbolize_tracebacks
 sys.path.append(r'/Users/brendanliang/Code/brendans_bloomberg')
 from interface.data_sources.api_key import api_key
 import os
@@ -7,6 +6,29 @@ from datetime import date
 import pandas as pd
 import yfinance as yf
 import fmpsdk
+
+class price_history():
+    def __init__(self, symbol:str, path_root:str = r'/Users/brendanliang/Code/brendans_bloomberg'):
+        try:
+            download_and_save_price_history(symbol=symbol)
+        except: 
+            raise RuntimeError("price history not up to date, used saved file if avalible")
+        if os.path.exists(os.path.join(path_root, f"data/equities/{symbol}/price_history.csv")):
+            ph_raw = pd.read_csv(os.path.join(path_root, f"data/equities/{symbol}/price_history.csv"))
+            self.price_history = ph_raw
+            dates = self.price_history.loc[:,"date"]
+            date_list = []
+            for i in range(len(dates)):
+                intermediate = date.fromisoformat(str(dates[i]))
+                date_list.append(intermediate)
+            self.dates = pd.DataFrame(date_list)
+            self.close = self.price_history.loc[:,"close"]
+            self.open = self.price_history.loc[:,"open"]
+            self.high = self.price_history.loc[:,"high"]
+            self.low = self.price_history.loc[:,"low"]
+            self.volume = self.price_history.loc[:,"volume"]
+        else:
+            raise ValueError("price history cannot be obtained")
 
 def download_and_save_price_history(symbol, path_root:str = r'/Users/brendanliang/Code/brendans_bloomberg'):
     try:
@@ -44,10 +66,8 @@ def download_and_save_price_history(symbol, path_root:str = r'/Users/brendanlian
             combined = pd.DataFrame(data)
             combined.to_csv(f"{path_root}/data/equities/{symbol}/price_history.csv")
         except:
-            try:
-                pass
-            except:
-                raise RuntimeError("cannot attain price history")
+            raise RuntimeError("cannot attain price history")
+
         
 
 
