@@ -12,7 +12,7 @@ class annual_income_statement():
         path = os.path.join(path_root, f'data/equities/{symbol}/annual_income_statement.csv')
         income_statement = pd.read_csv(path)
         self.income_statement = income_statement.transpose()
-        self.income_statement = income_statement_filing(self.income_statement, year, type="annual")
+        self.income_statement_filing = income_statement_filing(self.income_statement, year, type="annual")
         
 class quarterly_income_statement():
     def __init__(self, symbol,  year: int, quarter: str, path_root: str = r'/Users/brendanliang/Code/brendans_bloomberg') -> None:
