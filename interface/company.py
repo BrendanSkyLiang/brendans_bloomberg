@@ -1,5 +1,4 @@
 import sys
-from tkinter import Y
 sys.path.append(r'/Users/brendanliang/Code/brendans_bloomberg')
 import numpy as numpy
 from interface.data_sources.balance_sheet import annual_balance_sheet, balance_sheet_filing, quarterly_balance_sheet
