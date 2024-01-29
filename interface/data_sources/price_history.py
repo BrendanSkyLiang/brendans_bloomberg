@@ -12,7 +12,7 @@ class price_history():
         try:
             download_and_save_price_history(symbol=symbol)
         except: 
-            raise RuntimeError("price history not up to date, used saved file if avalible")
+            print("price history not up to date, used saved file if avalible")
         if os.path.exists(os.path.join(path_root, f"data/equities/{symbol}/price_history.csv")):
             ph_raw = pd.read_csv(os.path.join(path_root, f"data/equities/{symbol}/price_history.csv"))
             self.price_history = ph_raw
@@ -36,6 +36,8 @@ def download_and_save_price_history(symbol, path_root:str = r'/Users/brendanlian
         ph = pd.DataFrame(ph_raw)
         date_list = []
         date_original = ph.loc[:,"date"]
+        if len(date_original) < 10:
+            exit()
         for i in range(len(date_original)):
             intermediate = date.fromisoformat(str(date_original[i]))
             date_list.append(intermediate)
@@ -53,6 +55,8 @@ def download_and_save_price_history(symbol, path_root:str = r'/Users/brendanlian
             ph = pd.DataFrame(tick.history(period='max'))
             date_raw = ph.index
             date_list = []
+            if len(date_raw) < 10:
+                exit()
             for i in range(len(date_raw)):
                 intermediate = str(date_raw[i])
                 datetime_intermediate = date.fromisoformat(intermediate[:10])

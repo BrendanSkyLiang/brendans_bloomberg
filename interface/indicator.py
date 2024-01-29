@@ -12,11 +12,13 @@ class Yahoo_Indicator():
         try:
             download_and_save_yahoo_price_history(symbol=symbol)
         except: 
-            raise RuntimeError("price history not up to date, used saved file if avalible")
+            print("price history not up to date, used saved file if avalible")
         if os.path.exists(os.path.join(path_root, f"data/indicators/{symbol}/price_history.csv")):
             ph_raw = pd.read_csv(os.path.join(path_root, f"data/indicators/{symbol}/price_history.csv"))
             self.price_history = ph_raw
             dates = self.price_history.loc[:,"date"]
+            if len(dates) < 10:
+                exit()
             date_list = []
             for i in range(len(dates)):
                 intermediate = date.fromisoformat(str(dates[i]))
@@ -37,6 +39,8 @@ def download_and_save_yahoo_price_history(symbol, path_root:str = r'/Users/brend
         ph = pd.DataFrame(tick.history(period='max'))
         date_raw = ph.index
         date_list = []
+        if len(date_raw) < 10:
+            exit()
         for i in range(len(date_raw)):
             intermediate = str(date_raw[i])
             datetime_intermediate = date.fromisoformat(intermediate[:10])

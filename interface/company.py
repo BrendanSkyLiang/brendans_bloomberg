@@ -22,7 +22,7 @@ class Company():
         return quarterly_balance_sheet(self.symbol, year=year, quarter=quarter).balance_sheet_filing
     
     def get_annual_cashflow(self, year:int) -> cashflow_filing: 
-        return annual_cashflow(self.symbol, year=year).cashflow_filing
+        return annual_cashflow(self.symbol, year=year).cashflow
     
     def get_quarterly_cashflow(self, year:int, quarter:str)->cashflow_filing:
         return quarterly_cashflow(self.symbol, year=year, quarter=quarter).cashflow_filing

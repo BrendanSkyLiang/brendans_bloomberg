@@ -17,9 +17,9 @@ def find_col_index(df, target_value, row_index):
         indexes = row[row == target_value].index.tolist()
         if len(indexes) == 1:
             return indexes
-        elif len(indexes) > 0:
-            print(f"Multiple volumns found with value '{target_value}' in column '{target_column}'. Returning the index of the first one.")
-            return indexes[0]
+        elif len(indexes) > 1:
+            print(f"Multiple volumns found with value '{target_value}' in column '{row_index}'. Returning the a list of all matching indexes.")
+            return indexes
         else:
             raise ValueError(f"target value {target_value} is not in range")
     except:
