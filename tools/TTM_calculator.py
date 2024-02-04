@@ -25,7 +25,7 @@ def trailing_twelve_month(symbol: str, financial_statement: str):
     for i in range(3, len(statement)):
         empty = raw_dict.copy()
         for key, _ in statement[i].items():
-            if type(statement[i][key]) == str or key == "calendarYear" or key == "fillingDate" or key == "cik" or key == "weightedAverageShsOutDil" or key == "weightedAverageShsOut" or "Ratio" in key:
+            if type(statement[i][key]) == str or key == "calendarYear" or key == "finalLink" or key == "link" or key == "fillingDate" or key == "cik" or key == "weightedAverageShsOutDil" or key == "weightedAverageShsOut" or "Ratio" in key:
                 empty[key] = statement[i][key]
             else:
                 empty[key] = statement[i][key] + statement[i-1][key] + statement[i-2][key] + statement[i-3][key]         
@@ -33,7 +33,7 @@ def trailing_twelve_month(symbol: str, financial_statement: str):
     ttm_statements = ttm_statements[::-1]
     return ttm_statements
     
-trailing_twelve_month("GOOG", 'income_statement')
+# trailing_twelve_month("BUD", 'cashflow_statement')
 
 
 

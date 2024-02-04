@@ -12,7 +12,7 @@ class profile():
         self.profile = profile.transpose()
         self.beta = float(self.profile.loc["beta"])
         self.avg_volume = int(self.profile.loc["volAvg"])
-        self.name = self.profile.loc["companyName"]
+        self.name = self.profile.loc["companyName"][0]
         self.exchange = str(self.profile.loc["exchangeShortName"])
         self.industry = str(self.profile.loc["industry"])
         self.description = str(self.profile.loc["description"])
