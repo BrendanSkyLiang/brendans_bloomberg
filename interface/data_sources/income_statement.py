@@ -9,6 +9,7 @@ import pandas as pd
 import fmpsdk
 from tools.helper.pandas_tools import find_col_index
 from tools.helper.common_lists import find_common_set
+from datetime import datetime
 
 class annual_income_statement():
     def __init__(self, symbol, path_root: str = r'/Users/brendanliang/Code/brendans_bloomberg') -> None:
@@ -36,5 +37,8 @@ class Income_statement():
         for col_idx in income_statment:
             empty = income_statement_dict.copy()
             for key in income_statement_dict:
-                empty[key] = income_statment.loc[key,col_idx]
+                if key == "fillingDate":
+                    empty[key] =  datetime.strptime(income_statment.loc[key,col_idx], "%Y-%m-%d").date()
+                else:
+                    empty[key] = income_statment.loc[key,col_idx]
             self.income_list.append(empty)

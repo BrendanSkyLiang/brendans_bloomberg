@@ -6,6 +6,7 @@ import pandas as pd
 import fmpsdk
 from tools.helper.pandas_tools import find_col_index
 from tools.helper.common_lists import find_common_set
+from datetime import datetime
 
 class annual_cashflow():
     def __init__(self, symbol, path_root: str = r'/Users/brendanliang/Code/brendans_bloomberg') -> None:
@@ -33,5 +34,8 @@ class Cashflow():
         for col_idx in cashflow_statment:
             empty = cashflow_dict.copy()
             for key in cashflow_dict:
-                empty[key] = cashflow_statment.loc[key,col_idx]
+                if key == "fillingDate":
+                    empty[key] = datetime.strptime(cashflow_statment.loc[key,col_idx], "%Y-%m-%d").date()
+                else:
+                    empty[key] = cashflow_statment.loc[key,col_idx]
             self.cashflow_list.append(empty)

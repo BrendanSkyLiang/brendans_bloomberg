@@ -6,6 +6,7 @@ import pandas as pd
 import fmpsdk
 from tools.helper.pandas_tools import find_col_index
 from tools.helper.common_lists import find_common_set
+from datetime import datetime
 
 class annual_balance_sheet():
     def __init__(self, symbol, path_root: str = r'/Users/brendanliang/Code/brendans_bloomberg') -> None:
@@ -33,5 +34,8 @@ class Balance_sheet():
         for col_idx in balance_sheet:
             empty = balance_sheet_dict.copy()
             for key in balance_sheet_dict:
-                empty[key] = balance_sheet.loc[key,col_idx]
+                if key == "fillingDate":
+                    empty[key] = datetime.strptime(balance_sheet.loc[key,col_idx], "%Y-%m-%d").date()
+                else:
+                    empty[key] = balance_sheet.loc[key,col_idx]
             self.balance_list.append(empty)

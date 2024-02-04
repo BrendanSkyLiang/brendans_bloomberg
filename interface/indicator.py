@@ -2,10 +2,11 @@ import sys
 sys.path.append(r'/Users/brendanliang/Code/brendans_bloomberg')
 from interface.data_sources.api_key import api_key
 import os
-from datetime import date
+from datetime import datetime
 import pandas as pd
 import yfinance as yf
 import fmpsdk
+import numpy as np
 
 class Yahoo_Indicator():
     def __init__(self, symbol:str, path_root:str = r'/Users/brendanliang/Code/brendans_bloomberg'):
@@ -21,13 +22,13 @@ class Yahoo_Indicator():
                 exit()
             date_list = []
             for i in range(len(dates)):
-                intermediate = date.fromisoformat(str(dates[i]))
+                intermediate = datetime.fromisoformat(str(dates[i])).date()
                 date_list.append(intermediate)
-            self.dates = pd.DataFrame(date_list)
-            self.close = self.price_history.loc[:,"close"]
-            self.open = self.price_history.loc[:,"open"]
-            self.high = self.price_history.loc[:,"high"]
-            self.low = self.price_history.loc[:,"low"]
+            self.dates = np.array(pd.DataFrame(date_list))
+            self.close = np.array(self.price_history.loc[:,"close"])
+            self.open = np.array(self.price_history.loc[:,"open"])
+            self.high = np.array(self.price_history.loc[:,"high"])
+            self.low = np.array(self.price_history.loc[:,"low"])
         else:
             raise ValueError("price history cannot be obtained")
 

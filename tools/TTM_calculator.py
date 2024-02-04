@@ -1,48 +1,39 @@
 import sys
 sys.path.append(r'/Users/brendanliang/Code/brendans_bloomberg') 
-import numpy as np
-import pandas as pd
-import os
-import subprocess
-import shlex
-import datetime
 from interface.company import Company
-from interface.data_sources.balance_sheet import annual_balance_sheet, quarterly_balance_sheet
-from interface.data_sources.cashflow_statement import annual_cashflow, quarterly_cashflow
-from interface.data_sources.income_statement import annual_income_statement, quarterly_income_statement
-import math
 
 
-def trailing_twelve_month(symbol: str, financial_statement: str, yr = 2021):
+def trailing_twelve_month(symbol: str, financial_statement: str):
     if financial_statement == "balance_sheet":
-        statement = quarterly_balance_sheet(symbol, yr, "Q4").balance_sheet
+        company = Company(symbol)
+        statement = company.quarterly_balance_sheet.balance_sheet
+        return statement
     elif financial_statement == "cashflow_statement":
-        statement = quarterly_cashflow(symbol, yr, "Q4").cashflow
+        company = Company(symbol)
+        statement = company.quarterly_cashflow.cashflow
     elif financial_statement == "income_statement":
-        statement = quarterly_income_statement(symbol, yr, "Q4").income_statement
+        company = Company(symbol)
+        statement = company.quarterly_income_statement.income_statement
     else:
         raise ValueError(f"financial statement {financial_statement} doesn't exist")
+    statement = statement[::-1]
+    ttm_statements = []
+    raw_dict = {}
     
-    df = statement
+    for key, _ in statement[0].items():
+        raw_dict[key] = None
+    for i in range(3, len(statement)):
+        empty = raw_dict.copy()
+        for key, _ in statement[i].items():
+            if type(statement[i][key]) == str or key == "calendarYear" or key == "fillingDate" or key == "cik" or key == "weightedAverageShsOutDil" or key == "weightedAverageShsOut" or "Ratio" in key:
+                empty[key] = statement[i][key]
+            else:
+                empty[key] = statement[i][key] + statement[i-1][key] + statement[i-2][key] + statement[i-3][key]         
+        ttm_statements.append(empty)
+    ttm_statements = ttm_statements[::-1]
+    return ttm_statements
     
-    ttm_df = pd.DataFrame(columns=df.)  # Create an empty dataframe for TTM data
-
-    for i in range(len(df)):
-        if i >= 4:  # Only calculate TTMs for quarters where data is available
-            prev_year_qtr = i - 4
-
-            # Calculate TTM values for numeric columns
-            ttm_df.loc[df.index[i], df.select_dtypes(include=[np.number]).columns] = df.iloc[i:prev_year_qtr:-1].sum(axis=0) + df.iloc[i, df.select_dtypes(include=[np.number]).columns]
-
-            # Fill string columns with original values
-            ttm_df.loc[df.index[i], df.select_dtypes(exclude=[np.number]).columns] = df.iloc[i, df.select_dtypes(exclude=[np.number]).columns]
-
-    print(ttm_df)
-
-
-print(trailing_twelve_month("GOOG", "cashflow_statement"))
-    
-
+trailing_twelve_month("GOOG", 'income_statement')
 
 
 

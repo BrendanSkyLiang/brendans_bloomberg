@@ -2,8 +2,9 @@ import sys
 sys.path.append(r'/Users/brendanliang/Code/brendans_bloomberg')
 from interface.data_sources.api_key import api_key
 import os
-from datetime import date
+from datetime import datetime
 import pandas as pd
+import numpy as np
 import yfinance as yf
 import fmpsdk
 
@@ -19,14 +20,14 @@ class price_history():
             dates = self.price_history.loc[:,"date"]
             date_list = []
             for i in range(len(dates)):
-                intermediate = date.fromisoformat(str(dates[i]))
+                intermediate = datetime.fromisoformat(str(dates[i])).date()
                 date_list.append(intermediate)
-            self.dates = pd.DataFrame(date_list)
-            self.close = self.price_history.loc[:,"close"]
-            self.open = self.price_history.loc[:,"open"]
-            self.high = self.price_history.loc[:,"high"]
-            self.low = self.price_history.loc[:,"low"]
-            self.volume = self.price_history.loc[:,"volume"]
+            self.dates = np.array(pd.DataFrame(date_list))
+            self.close = np.array(self.price_history.loc[:,"close"])
+            self.open = np.array(self.price_history.loc[:,"open"])
+            self.high = np.array(self.price_history.loc[:,"high"])
+            self.low = np.array(self.price_history.loc[:,"low"])
+            self.volume = np.array(self.price_history.loc[:,"volume"])
         else:
             raise ValueError("price history cannot be obtained")
 
