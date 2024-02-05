@@ -44,7 +44,7 @@ def download_and_save_yahoo_price_history(symbol, path_root:str = r'/Users/brend
             exit()
         for i in range(len(date_raw)):
             intermediate = str(date_raw[i])
-            datetime_intermediate = date.fromisoformat(intermediate[:10])
+            datetime_intermediate = datetime.fromisoformat(intermediate[:10]).date()
             date_list.append(datetime_intermediate)
         close = list(ph.loc[:,"Close"])
         open = list(ph.loc[:,"Open"])
