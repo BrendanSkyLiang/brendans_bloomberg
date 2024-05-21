@@ -10,14 +10,14 @@ from datetime import datetime
 
 class annual_cashflow():
     def __init__(self, symbol, path_root: str = r'/Users/brendanliang/Code/brendans_bloomberg') -> None:
-        path = os.path.join(path_root, f'data/equities/{symbol}/annual_cashflow.csv')
+        path = os.path.join(path_root, f'data/equities/{symbol}/annual_cash_flow_statement.csv')
         cashflow = pd.read_csv(path)
         self.raw_cashflow = cashflow.transpose()
         self.cashflow: list = Cashflow(self.raw_cashflow).cashflow_list
         
 class quarterly_cashflow():
     def __init__(self, symbol, path_root: str = r'/Users/brendanliang/Code/brendans_bloomberg') -> None:
-        path = os.path.join(path_root, f'data/equities/{symbol}/quarterly_cashflow.csv')
+        path = os.path.join(path_root, f'data/equities/{symbol}/quarter_cash_flow_statement.csv')
         cashflow = pd.read_csv(path)
         self.raw_cashflow = cashflow.transpose()
         self.cashflow: list = Cashflow(self.raw_cashflow).cashflow_list

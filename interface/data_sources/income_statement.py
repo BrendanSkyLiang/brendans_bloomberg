@@ -20,7 +20,7 @@ class annual_income_statement():
         
 class quarterly_income_statement():
     def __init__(self, symbol, path_root: str = r'/Users/brendanliang/Code/brendans_bloomberg') -> None:
-        path = os.path.join(path_root, f'data/equities/{symbol}/quarterly_income_statement.csv')
+        path = os.path.join(path_root, f'data/equities/{symbol}/quarter_income_statement.csv')
         income_statement = pd.read_csv(path)
         self.raw_income_statement = income_statement.transpose()
         self.income_statement: list = Income_statement(self.raw_income_statement).income_list

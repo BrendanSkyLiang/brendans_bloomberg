@@ -6,70 +6,64 @@ import fmpsdk
 import os
 
 def download_equity_data(symbol):
-    if not os.path.exists(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}"):
-        # Create the directory if it doesn't exist
-        os.makedirs(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}")
+    """Downloads equity data for a given company symbol.
 
+    Args:
+        symbol (str): The stock symbol of the company.
+
+    Returns:
+        None
+
+    Raises:
+        ValueError: If the company symbol is invalid.
+
+    **Example Usage:**
+
+    ```python
+    download_equity_data("AAPL")
+    ```
+
+    **Notes:**
+
+    * This function uses the Financial Modeling Prep (FMP) API to download equity data.
+    * The function downloads the following data for the company:
+        * Profile
+        * Income Statements (quarterly and annual)
+        * Balance Sheets (quarterly and annual)
+        * Cash Flow Statements (quarterly and annual)
+        * Financial Ratios (quarterly and annual)
+        * Key Metrics (quarterly and annual)
+        * Dividends
+    * The data is saved to the following directory:
+        `/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}`
+    * The function creates the directory if it doesn't exist.
+    """
+    
+    # Create the directory if it doesn't exist
+    os.makedirs(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}", exist_ok=True)
+    
     # Income Statements
     profile = fmpsdk.company_profile(apikey=api_key, symbol=symbol)
     profile = pd.DataFrame(profile)
     profile.transpose()
     profile.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/profile.csv",)
+    
+    api_calls = {
+        "income_statement": fmpsdk.income_statement,
+        "balance_sheet": fmpsdk.balance_sheet_statement,
+        "cash_flow_statement": fmpsdk.cash_flow_statement,
+        "financial_ratios": fmpsdk.financial_ratios,
+        "key_metrics": fmpsdk.key_metrics,
+    }
 
-    # Income Statements
-    quarterly_income_statement = fmpsdk.income_statement(apikey=api_key, symbol=symbol, period= "quarter",limit=100)
-    q_income_statement = pd.DataFrame(quarterly_income_statement)
-    q_income_statement.transpose()
-    q_income_statement.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/quarterly_income_statement.csv")
-    
-    annual_income_statement = fmpsdk.income_statement(apikey=api_key, symbol=symbol, period= "annual",limit=100)
-    a_income_statement = pd.DataFrame(annual_income_statement)
-    a_income_statement.transpose()
-    a_income_statement.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/annual_income_statement.csv")
-    
-    # Balance Sheets
-    quarterly_balance_sheet = fmpsdk.balance_sheet_statement(apikey=api_key, symbol=symbol, period= "quarter",limit=100)
-    q_balance_sheet = pd.DataFrame(quarterly_balance_sheet)
-    q_balance_sheet.transpose()
-    q_balance_sheet.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/quarterly_balance_sheet.csv")
-    
-    annual_balance_sheet = fmpsdk.balance_sheet_statement(apikey=api_key, symbol=symbol, period= "annual",limit=100)
-    a_balance_sheet = pd.DataFrame(annual_balance_sheet)
-    a_balance_sheet.transpose()
-    a_balance_sheet.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/annual_balance_sheet.csv")
-    
-    # Cash Flow Statement
-    quarterly_cashflow = fmpsdk.cash_flow_statement(apikey=api_key, symbol=symbol, period= "quarter",limit=100)
-    q_cashflow = pd.DataFrame(quarterly_cashflow)
-    q_cashflow.transpose()
-    q_cashflow.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/quarterly_cashflow.csv")
-    
-    annual_cashflow = fmpsdk.cash_flow_statement(apikey=api_key, symbol=symbol, period= "annual",limit=100)
-    a_cashflow = pd.DataFrame(annual_cashflow)
-    a_cashflow.transpose()
-    a_cashflow.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/annual_cashflow.csv")
+    for statement, api_call in api_calls.items():
+        for period in ["quarter", "annual"]:
+            data = api_call(apikey=api_key, symbol=symbol, period=period, limit=100)
+            df = pd.DataFrame(data)
+            df.transpose()
+            df.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/{period}_{statement}.csv")
 
-    # Financial Ratios
-    quarterly_financial_ratios = fmpsdk.financial_ratios(apikey=api_key, symbol=symbol, period= "quarter",limit=100)
-    q_financial_ratios = pd.DataFrame(quarterly_financial_ratios)
-    q_financial_ratios.transpose()
-    q_financial_ratios.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/quarterly_financial_ratios.csv")
-    
-    annual_financial_ratios = fmpsdk.financial_ratios(apikey=api_key, symbol=symbol, period= "annual",limit=100)
-    a_financial_ratios = pd.DataFrame(annual_financial_ratios)
-    a_financial_ratios.transpose()
-    a_financial_ratios.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/annual_financial_ratios.csv")
-
-    # Key Metrics
-    quarterly_key_metrics = fmpsdk.key_metrics(apikey=api_key, symbol=symbol, period= "quarter",limit=100)
-    q_key_metrics = pd.DataFrame(quarterly_key_metrics)
-    q_key_metrics.transpose()
-    q_key_metrics.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/quarterly_key_metrics.csv")
-    
-    annual_key_metrics = fmpsdk.key_metrics(apikey=api_key, symbol=symbol, period= "annual",limit=100)
-    a_key_metrics = pd.DataFrame(annual_key_metrics)
-    a_key_metrics.transpose()
-    a_key_metrics.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/annual_key_metrics.csv")
+    print(f"{symbol} has been updated")
 
     # Dividends
     dividends = fmpsdk.historical_stock_dividend(apikey=api_key, symbol=symbol)
@@ -82,9 +76,7 @@ def download_equity_data(symbol):
     dividends.transpose()
     dividends.to_csv(f"/Users/brendanliang/Code/brendans_bloomberg/data/equities/{symbol}/dividends.csv")
 
-    print(f"{symbol} has been updated")
 
-# download_equity_data("AAPL")
 
 
 

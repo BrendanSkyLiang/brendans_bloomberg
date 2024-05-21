@@ -11,3 +11,6 @@ from interface.forex import forex
 path = "/Users/brendanliang/Code/brendans_bloomberg"
 directories = subprocess.run(shlex.split(f"ls /Users/brendanliang/Code/brendans_bloomberg/data/equities"), capture_output=True, text=True)
 list_directories = directories.stdout.splitlines()
+
+def market_screener(list_directories):
+    

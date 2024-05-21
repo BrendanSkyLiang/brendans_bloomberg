@@ -17,7 +17,7 @@ class annual_balance_sheet():
         
 class quarterly_balance_sheet():
     def __init__(self, symbol, path_root: str = r'/Users/brendanliang/Code/brendans_bloomberg') -> None:
-        path = os.path.join(path_root, f'data/equities/{symbol}/quarterly_balance_sheet.csv')
+        path = os.path.join(path_root, f'data/equities/{symbol}/quarter_balance_sheet.csv')
         balance_sheet = pd.read_csv(path)
         self.raw_balance_sheet = balance_sheet.transpose()
         self.balance_sheet: list = Balance_sheet(self.raw_balance_sheet).balance_list

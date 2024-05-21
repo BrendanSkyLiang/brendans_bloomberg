@@ -4,6 +4,19 @@ from interface.company import Company
 
 
 def trailing_twelve_month(symbol: str, financial_statement: str):
+    """Calculates the trailing twelve months (TTM) for a company's financial statement.
+
+    Args:
+        symbol (str): The stock symbol of the company.
+        financial_statement (str): The type of financial statement to calculate the TTM for.
+            Valid options include "balance_sheet", "cashflow_statement", and "income_statement".
+
+    Returns:
+        list: A list of dictionaries containing the TTM values for each key in the financial statement.
+
+    Raises:
+        ValueError: If the provided financial statement type is invalid.
+    """
     if financial_statement == "balance_sheet":
         company = Company(symbol)
         statement = company.quarterly_balance_sheet.balance_sheet
